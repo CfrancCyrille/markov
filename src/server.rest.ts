@@ -1,18 +1,23 @@
-import { Routes } from './routes';
+import { Routes } from "./routes";
 import * as express from "express";
-import * as http from 'http';
+import * as http from "http";
+import * as bodyParser from "body-parser";
+import * as cors from "cors";
 
 const PORT: number = 3000;
 const PREFIX: string = "/";
 
 export class RestServer {
-  public static start(app: express.Express, port: number = PORT, routePrefix: string = PREFIX): http.Server {
-    
+  public static start(
+    app: express.Express,
+    port: number = PORT,
+    routePrefix: string = PREFIX
+  ): http.Server {
     // IMPORTANT: Routes must be defined AFTER the initialization of the app
     // so that it can use the configured middleware!
     app.use(routePrefix, Routes);
 
-    const server = app.listen(port,()=>{
+    const server = app.listen(port, () => {
       console.log(`REST SERVER started on port ${port} !`);
     });
 
@@ -23,13 +28,13 @@ export class RestServer {
   }
 
   private static init(app: express.Express) {
-
+    app.use(cors());
   }
 
   private static initHeader(app: express.Express) {
     app.use((req: express.Request, res: express.Response) => {
       // Request methods you wish to allow
-      res.setHeader('Access-Control-Allow-Methods', 'GET');
+      res.setHeader("Access-Control-Allow-Methods", "GET");
     });
   }
 }
