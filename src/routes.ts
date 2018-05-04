@@ -1,10 +1,12 @@
 import * as express from "express";
 import { MarkovController } from "./controller/markov.controller";
 import * as bodyParser from "body-parser";
+import * as cors from "cors";
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(cors());
 
 app.get("/", (req: express.Request, res: express.Response) => {
   res.status(200).json({
@@ -12,7 +14,7 @@ app.get("/", (req: express.Request, res: express.Response) => {
     "Get multiple sentences": "GET /markov/:sentenceNumber",
     "Get scenary by end": "POST /markov/end",
     "Get scenary by end with min length": "POST /markov/end/:maxLength",
-    "Get multiple sentences with sentences":" POST /markov/sentences"
+    "Get multiple sentences with sentences": " POST /markov/sentences"
   });
 });
 
@@ -44,21 +46,18 @@ app.get(
   }
 );
 
-app.post(
-  "/markov/end",
-  (req: express.Request, res: express.Response) => {
-    const end = req.body["end"];
-    MarkovController.CreateSentencesWithEnd(end)
-      .then(result => {
-        res.status(200).json({
-          data: result
-        });
-      })
-      .catch(error => {
-        res.sendStatus(500);
+app.post("/markov/end", (req: express.Request, res: express.Response) => {
+  const end = req.body["end"];
+  MarkovController.CreateSentencesWithEnd(end)
+    .then(result => {
+      res.status(200).json({
+        data: result
       });
-  }
-);
+    })
+    .catch(error => {
+      res.sendStatus(500);
+    });
+});
 
 app.post(
   "/markov/end/:maxLength",
@@ -81,7 +80,7 @@ app.post(
   "/markov/sentences/",
   (req: express.Request, res: express.Response) => {
     const data = req.body["data"];
-    MarkovController.CreateSentences(1,data)
+    MarkovController.CreateSentences(1, data)
       .then(result => {
         res.status(200).json({
           data: result
@@ -97,7 +96,7 @@ app.post(
   (req: express.Request, res: express.Response) => {
     const sentenceNumber = req.params["sentenceNumber"];
     const data = req.body["data"];
-    MarkovController.CreateSentences(sentenceNumber,data)
+    MarkovController.CreateSentences(sentenceNumber, data)
       .then(result => {
         res.status(200).json({
           data: result

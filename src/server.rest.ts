@@ -2,7 +2,6 @@ import { Routes } from "./routes";
 import * as express from "express";
 import * as http from "http";
 import * as bodyParser from "body-parser";
-import * as cors from "cors";
 
 const PORT: number = 3000;
 const PREFIX: string = "/";
@@ -28,7 +27,7 @@ export class RestServer {
   }
 
   private static init(app: express.Express) {
-    app.use(cors());
+
   }
 
   private static initHeader(app: express.Express) {
